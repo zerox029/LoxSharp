@@ -10,9 +10,9 @@
       "request": "launch",
       "preLaunchTask": "build",
       // If you have changed target frameworks, make sure to update the program path.
-      "program": "${workspaceFolder}/LoxSharp/bin/Debug/net5.0/LoxSharp.dll",
+      "program": "${workspaceFolder}/Lox/bin/Debug/net5.0/Lox.dll",
       "args": [],
-      "cwd": "${workspaceFolder}/LoxSharp",
+      "cwd": "${workspaceFolder}/Lox",
       // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
       "console": "internalConsole",
       "stopAtEntry": false
