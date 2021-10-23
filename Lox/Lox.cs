@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Collections.Generic;
 
 namespace Lox {
   class Lox {
@@ -17,7 +19,7 @@ namespace Lox {
 
     private static void RunFile(string path) {
       byte[] bytes = File.ReadAllBytes(path);
-      Run(new string(bytes));
+      Run(new string(System.Text.Encoding.UTF8.GetString(bytes)));
 
       if (hadError) 
         System.Environment.Exit(1);
@@ -28,7 +30,7 @@ namespace Lox {
     }
 
     private static void Run(string source) {
-      Scanner scanner = new Scanner();
+      Scanner scanner = new Scanner(source);
       List<Token> tokens = scanner.ScanTokens();
 
       foreach (Token token in tokens) {
@@ -41,7 +43,7 @@ namespace Lox {
     }
 
     private static void Report(int line, string where, string message) {
-      Console.Error("[line " + line + "] Error" + where + ": " + message);
+      Console.WriteLine("!! [line " + line + "] Error" + where + ": " + message + " !!");
       hadError = true;
     }
   }

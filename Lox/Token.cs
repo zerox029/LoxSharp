@@ -1,9 +1,11 @@
+using System;
+
 namespace Lox {
   public class Token {
-    readonly TokenType Type { get; }
-    readonly string Lexeme { get; }
-    readonly Object Literal { get; }
-    readonly int Line { get; }
+    public TokenType Type { get; }
+    public string Lexeme { get; }
+    public Object Literal { get; }
+    public int Line { get; }
     
     public Token(TokenType type, string lexeme, Object literal, int line) {
       this.Type = type;
@@ -12,8 +14,8 @@ namespace Lox {
       this.Line = line;
     }
 
-    public string ToString() {
-      return Type + " " + Lexeme + " " + Literal;
+    public override string ToString() {
+      return $"Type: {Type} - Lexeme: {Lexeme} - Literal: {Literal}";
     }
   }
 }
