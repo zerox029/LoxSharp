@@ -28,13 +28,13 @@ namespace Tools {
       lines.Add("using System;");
       lines.Add("");
       lines.Add("namespace Lox {");
-      lines.Add("abstract class " + baseName + "{");
+      lines.Add("public abstract class " + baseName + "{");
 
       DefineVisitor(lines, baseName, types);
 
       foreach(string type in types) {
         lines.Add("");
-        
+
         string className = type.Split(":")[0].Trim();
         string fields = type.Split(":")[1].Trim();
         DefineType(lines, baseName, className, fields);
@@ -66,7 +66,7 @@ namespace Tools {
       // Fields
       string[] fields = fieldList.Split(", ");
       foreach(string field in fields) {
-        lines.Add("readonly " + field + ";");
+        lines.Add("public readonly " + field + ";");
       }
 
       lines.Add("");

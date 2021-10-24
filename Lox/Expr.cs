@@ -2,7 +2,7 @@ using System;
 
 namespace Lox
 {
-  abstract class Expr
+  public abstract class Expr
   {
     public interface IExprVisitor<T>
     {
@@ -14,9 +14,9 @@ namespace Lox
 
     public class Binary : Expr
     {
-      readonly Expr left;
-      readonly Token op;
-      readonly Expr right;
+      public readonly Expr left;
+      public readonly Token op;
+      public readonly Expr right;
 
       public Binary(Expr left, Token op, Expr right)
       {
@@ -33,7 +33,7 @@ namespace Lox
 
     public class Grouping : Expr
     {
-      readonly Expr expression;
+      public readonly Expr expression;
 
       public Grouping(Expr expression)
       {
@@ -48,7 +48,7 @@ namespace Lox
 
     public class Literal : Expr
     {
-      readonly Object value;
+      public readonly Object value;
 
       public Literal(Object value)
       {
@@ -63,8 +63,8 @@ namespace Lox
 
     public class Unary : Expr
     {
-      readonly Token op;
-      readonly Expr right;
+      public readonly Token op;
+      public readonly Expr right;
 
       public Unary(Token op, Expr right)
       {
