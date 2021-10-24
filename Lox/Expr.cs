@@ -14,15 +14,15 @@ namespace Lox
 
     public class Binary : Expr
     {
-      public readonly Expr left;
-      public readonly Token op;
-      public readonly Expr right;
+      public Expr Left { get; }
+      public Token Op { get; }
+      public Expr Right { get; }
 
       public Binary(Expr left, Token op, Expr right)
       {
-        this.left = left;
-        this.op = op;
-        this.right = right;
+        this.Left = left;
+        this.Op = op;
+        this.Right = right;
       }
 
       public override T Accept<T>(IExprVisitor<T> visitor)
@@ -33,11 +33,11 @@ namespace Lox
 
     public class Grouping : Expr
     {
-      public readonly Expr expression;
+      public Expr Expression { get; }
 
       public Grouping(Expr expression)
       {
-        this.expression = expression;
+        this.Expression = expression;
       }
 
       public override T Accept<T>(IExprVisitor<T> visitor)
@@ -48,11 +48,11 @@ namespace Lox
 
     public class Literal : Expr
     {
-      public readonly Object value;
+      public Object Value { get; }
 
       public Literal(Object value)
       {
-        this.value = value;
+        this.Value = value;
       }
 
       public override T Accept<T>(IExprVisitor<T> visitor)
@@ -63,13 +63,13 @@ namespace Lox
 
     public class Unary : Expr
     {
-      public readonly Token op;
-      public readonly Expr right;
+      public Token Op { get; }
+      public Expr Right { get; }
 
       public Unary(Token op, Expr right)
       {
-        this.op = op;
-        this.right = right;
+        this.Op = op;
+        this.Right = right;
       }
 
       public override T Accept<T>(IExprVisitor<T> visitor)
