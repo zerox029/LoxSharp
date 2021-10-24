@@ -1,2 +1,4 @@
 // Your first Lox program!
+/* MUlti line comment 
+LINE 2 */
 print "Hello, world!";

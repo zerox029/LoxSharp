@@ -80,6 +80,9 @@ namespace Lox {
         case '/':
           if(Match('/')) {
             while(Peek() != '\n' && !IsAtEnd()) Advance();
+          } else if(Match('*')) {
+            while(Peek() != '*' && PeekNext() != '/') Advance();
+            SkipBytes(2);
           } else {
             AddToken(TokenType.SLASH);
           }
@@ -122,6 +125,10 @@ namespace Lox {
     private char PeekNext() {
       if(current + 1 >= source.Length) return '\0';
       return source[current + 1];
+    }
+
+    private void SkipBytes(int count) {
+      current += count;
     }
 
     private char Advance() {
