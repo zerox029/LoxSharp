@@ -30,11 +30,18 @@ namespace Tools {
       lines.Add("namespace Lox {");
       lines.Add("abstract class " + baseName + "{");
 
+      DefineVisitor(lines, baseName, types);
+
       foreach(string type in types) {
+        lines.Add("");
+        
         string className = type.Split(":")[0].Trim();
         string fields = type.Split(":")[1].Trim();
         DefineType(lines, baseName, className, fields);
       }
+
+      lines.Add("");
+      lines.Add("public abstract T Accept<T>(I" + baseName + "Visitor<T> visitor);");
 
       lines.Add("}");
       lines.Add("}");
@@ -42,8 +49,19 @@ namespace Tools {
       File.WriteAllLines(path, lines);
     }
 
+    private static void DefineVisitor(List<string> lines, string baseName, List<string> types) {
+      lines.Add("public interface I" + baseName + "Visitor<T> {");
+
+      foreach(string type in types) {
+        string typeName = type.Split(":")[0].Trim();
+        lines.Add("T Visit" + typeName + baseName + "(" + baseName + "." + typeName + " " + baseName.ToLower() + ");");
+      }
+
+      lines.Add("}");
+    }
+
     private static void DefineType(List<string> lines, string baseName, string className, string fieldList) {
-      lines.Add("class " + className + " : " + baseName + " {");
+      lines.Add("public class " + className + " : " + baseName + " {");
 
       // Fields
       string[] fields = fieldList.Split(", ");
@@ -54,7 +72,7 @@ namespace Tools {
       lines.Add("");
 
       // Constructor
-      lines.Add(className + "(" + fieldList + ") {");
+      lines.Add("public " + className + "(" + fieldList + ") {");
 
       // Storing the fields
       foreach(string field in fields) {
@@ -63,6 +81,12 @@ namespace Tools {
       }
 
       lines.Add("}");
+
+      lines.Add("");
+      lines.Add("public override T Accept<T>(I" + baseName + "Visitor<T> visitor) {");
+      lines.Add("return visitor.Visit" + className + baseName + "(this);");
+      lines.Add("}");
+
       lines.Add("}");
     }
   }
