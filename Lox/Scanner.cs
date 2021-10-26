@@ -14,22 +14,22 @@ namespace Lox {
 
     static Scanner() {
       keywords = new Dictionary<string, TokenType>();
-      keywords.Add("and",    TokenType.AND);
-      keywords.Add("class",  TokenType.CLASS);
-      keywords.Add("else",   TokenType.ELSE);
-      keywords.Add("false",  TokenType.FALSE);
-      keywords.Add("for",    TokenType.FOR);
-      keywords.Add("fun",    TokenType.FUN);
-      keywords.Add("if",     TokenType.IF);
-      keywords.Add("nil",    TokenType.NIL);
-      keywords.Add("or",     TokenType.OR);
-      keywords.Add("print",  TokenType.PRINT);
+      keywords.Add("and", TokenType.AND);
+      keywords.Add("class", TokenType.CLASS);
+      keywords.Add("else", TokenType.ELSE);
+      keywords.Add("false", TokenType.FALSE);
+      keywords.Add("for", TokenType.FOR);
+      keywords.Add("fun", TokenType.FUN);
+      keywords.Add("if", TokenType.IF);
+      keywords.Add("nil", TokenType.NIL);
+      keywords.Add("or", TokenType.OR);
+      keywords.Add("print", TokenType.PRINT);
       keywords.Add("return", TokenType.RETURN);
-      keywords.Add("super",  TokenType.SUPER);
-      keywords.Add("this",   TokenType.THIS);
-      keywords.Add("true",   TokenType.TRUE);
-      keywords.Add("var",    TokenType.VAR);
-      keywords.Add("while",  TokenType.WHILE);
+      keywords.Add("super", TokenType.SUPER);
+      keywords.Add("this", TokenType.THIS);
+      keywords.Add("true", TokenType.TRUE);
+      keywords.Add("var", TokenType.VAR);
+      keywords.Add("while", TokenType.WHILE);
     }
 
     public Scanner(string source) {
@@ -37,7 +37,7 @@ namespace Lox {
     }
 
     public List<Token> ScanTokens() {
-      while(!IsAtEnd()) {
+      while (!IsAtEnd()) {
         start = current;
         ScanToken();
       }
@@ -49,7 +49,7 @@ namespace Lox {
     private bool IsAtEnd() {
       return current >= source.Length;
     }
-  
+
     private void ScanToken() {
       char c = Advance();
 
@@ -78,10 +78,10 @@ namespace Lox {
           AddToken(Match('=') ? TokenType.GREATER_EQUAL : TokenType.GREATER);
           break;
         case '/':
-          if(Match('/')) {
-            while(Peek() != '\n' && !IsAtEnd()) Advance();
-          } else if(Match('*')) {
-            while(Peek() != '*' && PeekNext() != '/') Advance();
+          if (Match('/')) {
+            while (Peek() != '\n' && !IsAtEnd()) Advance();
+          } else if (Match('*')) {
+            while (Peek() != '*' && PeekNext() != '/') Advance();
             SkipBytes(2);
           } else {
             AddToken(TokenType.SLASH);
@@ -94,14 +94,14 @@ namespace Lox {
         case '\r':
         case '\t':
           break;
-        case '\n': 
-          line++; 
+        case '\n':
+          line++;
           break;
 
         default:
-          if(IsDigit(c))
+          if (IsDigit(c))
             Number();
-          else if(IsAlpha(c))
+          else if (IsAlpha(c))
             Identifier();
           else
             Lox.Error(line, "Unexpected character");
@@ -110,20 +110,20 @@ namespace Lox {
     }
 
     private bool Match(char expected) {
-      if(IsAtEnd()) return false;
-      if(source[current] != expected) return false;
+      if (IsAtEnd()) return false;
+      if (source[current] != expected) return false;
 
       current++;
       return true;
     }
 
     private char Peek() {
-      if(IsAtEnd()) return '\0';
+      if (IsAtEnd()) return '\0';
       return source[current];
     }
 
     private char PeekNext() {
-      if(current + 1 >= source.Length) return '\0';
+      if (current + 1 >= source.Length) return '\0';
       return source[current + 1];
     }
 
@@ -140,9 +140,9 @@ namespace Lox {
     }
 
     private bool IsAlpha(char c) {
-    return (c >= 'a' && c <= 'z') ||
-           (c >= 'A' && c <= 'Z') ||
-            c == '_';
+      return (c >= 'a' && c <= 'z') ||
+             (c >= 'A' && c <= 'Z') ||
+              c == '_';
     }
 
     private bool IsAlphaNumeric(char c) {
@@ -150,7 +150,7 @@ namespace Lox {
     }
 
     private void Identifier() {
-      while(IsAlphaNumeric(Peek())) Advance();
+      while (IsAlphaNumeric(Peek())) Advance();
 
       String text = source.Substring(start, current - start);
       TokenType type = keywords.GetValueOrDefault(text, TokenType.IDENTIFIER);
@@ -159,24 +159,24 @@ namespace Lox {
     }
 
     private void Number() {
-      while(IsDigit(Peek())) Advance();
+      while (IsDigit(Peek())) Advance();
 
-      if(Peek() == '.' && IsDigit(PeekNext())) {
+      if (Peek() == '.' && IsDigit(PeekNext())) {
         Advance();
 
-        while(IsDigit(Peek())) Advance();
+        while (IsDigit(Peek())) Advance();
       }
 
-      AddToken(TokenType.NUMBER, Double.Parse(source.Substring(start, current)));
+      AddToken(TokenType.NUMBER, Double.Parse(source.Substring(start, current - start)));
     }
 
     private void String() {
-      while(Peek() != '"' && !IsAtEnd()) {
-        if(Peek() == '\n') line++;
+      while (Peek() != '"' && !IsAtEnd()) {
+        if (Peek() == '\n') line++;
         Advance();
       }
 
-      if(IsAtEnd()) {
+      if (IsAtEnd()) {
         Lox.Error(line, "Unterminated string");
       }
 

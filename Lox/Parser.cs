@@ -3,11 +3,21 @@ using System;
 
 namespace Lox {
   public class Parser {
+    private class ParseError : Exception { }
+
     private readonly List<Token> tokens;
     private int current = 0;
 
     public Parser(List<Token> tokens) {
       this.tokens = tokens;
+    }
+
+    public Expr Parse() {
+      try {
+        return Expression();
+      } catch (ParseError error) {
+        return null;
+      }
     }
 
     private Expr Expression() {
@@ -83,9 +93,11 @@ namespace Lox {
 
       if (Match(TokenType.LEFT_PAREN)) {
         Expr expr = Expression();
-        Consume(TokenType.RIGHT_PAREN, "Expect ')' after expression.");
+        Consume(TokenType.RIGHT_PAREN, "Expected ')' after expression");
         return new Expr.Grouping(expr);
       }
+
+      throw Error(Peek(), "Expected expression");
     }
 
     private bool Match(params TokenType[] types) {
@@ -121,8 +133,36 @@ namespace Lox {
       return tokens[current - 1];
     }
 
-    private void Consume(TokenType type, string errorMessage) {
-      throw new NotImplementedException();
+    private Token Consume(TokenType type, string errorMessage) {
+      if (Check(type)) return Advance();
+
+      throw Error(Peek(), errorMessage);
+    }
+
+    private ParseError Error(Token token, string errorMessage) {
+      Lox.Error(token, errorMessage);
+      return new ParseError();
+    }
+
+    private void Synchronize() {
+      Advance();
+
+      while (!IsAtEnd())
+        if (Previous().Type == TokenType.SEMICOLON) return;
+
+      switch (Peek().Type) {
+        case TokenType.CLASS:
+        case TokenType.FUN:
+        case TokenType.VAR:
+        case TokenType.FOR:
+        case TokenType.IF:
+        case TokenType.WHILE:
+        case TokenType.PRINT:
+        case TokenType.RETURN:
+          return;
+      }
+
+      Advance();
     }
   }
 }
